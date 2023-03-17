@@ -39,7 +39,6 @@ end
   <div class="preview hidden">
     <%= preview_box(@template_invocation, @host) %>
   </div>
-
   <div class="terminal" data-refresh-url="<%= template_invocation_path(@template_invocation) %>">
     <% if @error %>
       <div class="line error"><%= @error %></div>
@@ -53,6 +52,17 @@ end
       <%= link_to_function(_('Scroll to top'), '$("html, body").animate({ scrollTop: 0 }, "slow");', :class => 'pull-right scroll-link-top') %>
     <% end %>
   </div>
+
+  <div class="terminal" data-refresh-url="<%= template_invocation_path(@template_invocation) %>">
+      <%= link_to_function(_('Scroll to bottom'), '$("html, body").animate({ scrollTop: $(document).height() }, "slow");', :class => 'pull-right scroll-link-bottom') %>
+
+      <div class="printable">
+        <%= render :partial => 'output_line_set', :collection => normalize_line_sets(@template_output_sets) %>
+      </div>
+
+      <%= link_to_function(_('Scroll to top'), '$("html, body").animate({ scrollTop: 0 }, "slow");', :class => 'pull-right scroll-link-top') %>
+  </div>
+
 
   <script>
     <%= render :partial => 'refresh.js' %>
