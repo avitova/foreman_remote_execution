@@ -10,6 +10,17 @@ class UiJobWizardController < ApplicationController
     render :json => {:job_categories => job_categories, :with_katello => with_katello, default_category: default_category, default_template: default_template&.id}
   end
 
+  def output_template
+    output_template = OutputTemplate.authorized.find(params[:id])
+    advanced_template_inputs, template_inputs = map_template_inputs(output_template.template_inputs_with_foreign).partition { |x| x["advanced"] }
+    render :json => {
+      :output_template => output_template,
+      :template_inputs => template_inputs,
+      :advanced_template_inputs => advanced_template_inputs,
+    }
+  end
+
+
   def template
     job_template = JobTemplate.authorized.find(params[:id])
     advanced_template_inputs, template_inputs = map_template_inputs(job_template.template_inputs_with_foreign).partition { |x| x["advanced"] }
