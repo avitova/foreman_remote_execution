@@ -4,6 +4,7 @@ import { buildHostQuery } from './steps/HostsAndInputs/buildHostQuery';
 
 export const submit = ({
   jobTemplateID,
+  selectedOutputTemplates,
   templateValues,
   advancedValues,
   scheduleValue,
@@ -118,6 +119,7 @@ export const submit = ({
       execution_timeout_interval: timeoutToKill,
       feature,
       time_to_pickup: timeToPickup,
+      output_templates: selectedOutputTemplates.output_templates,
     },
   };
   if (Object.keys(providerValues).length) {

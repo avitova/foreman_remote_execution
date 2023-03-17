@@ -11,6 +11,7 @@ import {
   selectCategoryError,
   selectAllTemplatesError,
   selectTemplateError,
+  selectOutputTemplateError,
   selectJobTemplatesSearch,
 } from '../../JobWizardSelectors';
 import { CategoryAndTemplate } from './CategoryAndTemplate';
@@ -27,6 +28,8 @@ const ConnectedCategoryAndTemplate = ({
   category,
   setCategory,
   isCategoryPreselected,
+  outputTemplates,
+  setOutputTemplates,
 }) => {
   const dispatch = useDispatch();
 
@@ -95,6 +98,7 @@ const ConnectedCategoryAndTemplate = ({
     categoryError: useSelector(selectCategoryError),
     allTemplatesError: useSelector(selectAllTemplatesError),
     templateError: useSelector(selectTemplateError),
+    outputTemplateError: useSelector(selectOutputTemplateError),
   };
   return (
     <CategoryAndTemplate
@@ -104,6 +108,8 @@ const ConnectedCategoryAndTemplate = ({
       selectedTemplateID={jobTemplate}
       setCategory={setCategory}
       selectedCategory={category}
+      selectedOutputTemplates={outputTemplates}
+      setOutputTemplates={setOutputTemplates}
       errors={errors}
     />
   );
@@ -115,7 +121,13 @@ ConnectedCategoryAndTemplate.propTypes = {
   category: PropTypes.string.isRequired,
   setCategory: PropTypes.func.isRequired,
   isCategoryPreselected: PropTypes.bool.isRequired,
+  outputTemplates: PropTypes.shape({
+    output_templates: PropTypes.array.isRequired,
+  }).isRequired,
+  setOutputTemplates: PropTypes.func.isRequired,
 };
-ConnectedCategoryAndTemplate.defaultProps = { jobTemplate: null };
+ConnectedCategoryAndTemplate.defaultProps = {
+  jobTemplate: null,
+};
 
 export default ConnectedCategoryAndTemplate;

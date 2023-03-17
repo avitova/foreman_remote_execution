@@ -14,6 +14,7 @@ import { get } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   selectJobTemplates,
+  selectOutputTemplates,
   selectHosts,
   selectHostCount,
   selectTemplateInputs,
@@ -33,6 +34,7 @@ import { HostPreviewModal } from '../HostsAndInputs/HostPreviewModal';
 const ReviewDetails = ({
   jobCategory,
   jobTemplateID,
+  outputTemplateID,
   advancedValues,
   scheduleValue,
   templateValues,
@@ -70,6 +72,10 @@ const ReviewDetails = ({
   const advancedTemplateInputs = useSelector(selectAdvancedTemplateInputs);
   const jobTemplate = jobTemplates.find(
     template => template.id === jobTemplateID
+  )?.name;
+  const outputTemplates = useSelector(selectOutputTemplates);
+  const outputTemplate = outputTemplates.find(
+    template => template.id === outputTemplateID
   )?.name;
 
   const hosts = useSelector(selectHosts);
@@ -113,6 +119,14 @@ const ReviewDetails = ({
         </StepButton>
       ),
       value: jobTemplate,
+    },
+    {
+      label: (
+        <StepButton stepName={WIZARD_TITLES.categoryAndTemplate}>
+          {__('Output template')}
+        </StepButton>
+      ),
+      value: outputTemplate,
     },
     {
       label: (
@@ -323,6 +337,7 @@ const ReviewDetails = ({
 ReviewDetails.propTypes = {
   jobCategory: PropTypes.string.isRequired,
   jobTemplateID: PropTypes.number,
+  outputTemplateID: PropTypes.number,
   advancedValues: PropTypes.object.isRequired,
   scheduleValue: PropTypes.object.isRequired,
   templateValues: PropTypes.object.isRequired,
@@ -331,7 +346,7 @@ ReviewDetails.propTypes = {
   goToStepByName: PropTypes.func.isRequired,
 };
 
-ReviewDetails.defaultProps = { jobTemplateID: null };
+ReviewDetails.defaultProps = { jobTemplateID: null, outputTemplateID: null };
 
 const WrappedReviewDetails = props => (
   <WizardContextConsumer>
