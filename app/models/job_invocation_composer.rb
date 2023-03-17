@@ -10,10 +10,12 @@ class JobInvocationComposer
     end
 
     def params
+      # 1 Add from ui to params
       { :job_category => job_invocation_base[:job_category],
         :targeting => targeting(ui_params.fetch(:targeting, {})),
         :triggering => triggering,
         :host_ids => ui_params[:host_ids],
+        :output_template_ids => ui_params[:output_template_ids],
         :remote_execution_feature_id => job_invocation_base[:remote_execution_feature_id],
         :description_format => job_invocation_base[:description_format],
         :ssh_user => blank_to_nil(job_invocation_base[:ssh_user]),
@@ -119,6 +121,7 @@ class JobInvocationComposer
     end
 
     def params
+      #2
       { :job_category => template.job_category,
         :targeting => targeting_params,
         :triggering => triggering_params,
@@ -131,7 +134,8 @@ class JobInvocationComposer
         :concurrency_control => concurrency_control_params,
         :execution_timeout_interval => api_params[:execution_timeout_interval] || template.execution_timeout_interval,
         :time_to_pickup => api_params[:time_to_pickup],
-        :template_invocations => template_invocations_params }.with_indifferent_access
+        :template_invocations => template_invocations_params,
+        :output_template_ids => api_params[:output_template_ids] }.with_indifferent_access
     end
 
     def remote_execution_feature_id
@@ -234,6 +238,9 @@ class JobInvocationComposer
         @host_ids = params[:host_ids]
       elsif params[:failed_only]
         @host_ids = job_invocation.failed_host_ids
+      end
+      if params[:output_template_ids]
+        @output_template_ids = params[:output_template_ids]
       end
     end
 
@@ -373,7 +380,7 @@ class JobInvocationComposer
 
   attr_accessor :params, :job_invocation, :host_ids, :search_query
   attr_reader :reruns
-  delegate :job_category, :remote_execution_feature_id, :pattern_template_invocations, :template_invocations, :targeting, :triggering, :to => :job_invocation
+  delegate :job_category, :remote_execution_feature_id, :pattern_template_invocations, :template_invocations, :targeting, :triggering, :output_templates, :to => :job_invocation
 
   def initialize(params, set_defaults = false)
     @params = params
@@ -384,6 +391,7 @@ class JobInvocationComposer
     compose
 
     @host_ids = validate_host_ids(params[:host_ids])
+    @output_templates_ids = params[:output_template_ids]
     @search_query = job_invocation.targeting.search_query if job_invocation.targeting.bookmark_id.blank?
   end
 
@@ -430,8 +438,25 @@ class JobInvocationComposer
     self
   end
 
+  def build_output_templates
+    # TODO validate
+    # TODO add output templates defined in the Wizard
+    temp = []
+    params[:output_template_ids].map do |output_t|
+      #job_invocation.output_templates.build(:id => output_t)
+      job_invocation.output_templates << OutputTemplate.find(output_t)
+      temp
+    end
+  end
+
   def trigger(raise_on_error = false)
     generate_description
+    if raise_on_error
+      save!
+    else
+      return false unless save
+    end
+    build_output_templates
     if raise_on_error
       save!
     else
