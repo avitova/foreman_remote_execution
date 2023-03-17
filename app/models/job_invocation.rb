@@ -90,6 +90,9 @@ class JobInvocation < ApplicationRecord
 
   encrypts :password, :key_passphrase, :effective_user_password
 
+  has_many :job_invocation_templates, dependent: :destroy
+  has_many :output_templates, through: :job_invocation_templates
+
   class Jail < Safemode::Jail
     allow :sub_task_for_host, :template_invocations_hosts
   end
