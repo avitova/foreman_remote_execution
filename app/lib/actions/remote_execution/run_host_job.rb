@@ -69,8 +69,11 @@ module Actions
         action_options = provider.proxy_command_options(template_invocation, host)
                                  .merge(additional_options)
 
-        plan_delegated_action(proxy, provider.proxy_action_class, action_options, proxy_action_class: ::Actions::RemoteExecution::ProxyAction)
-        plan_self :with_event_logging => true
+        sequence do
+          plan_delegated_action(proxy, provider.proxy_action_class, action_options, proxy_action_class: ::Actions::RemoteExecution::ProxyAction)
+          plan_self :with_event_logging => true
+          plan_action(::Actions::RemoteExecution::OutputProcessing, template_invocation_id: template_invocation.id)
+        end
       end
 
       def finalize(*args)
