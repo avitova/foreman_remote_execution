@@ -2,9 +2,9 @@ module Actions
   module RemoteExecution
     class OutputProcessing < Dynflow::Action
       def process_proxy_template(output, template)
-        b = binding
-        b.local_variable_set(:output, output)
-        ERB.new(template, nil, '-').result(b)
+        box = Safemode::Box.new
+        erb = ERB.new(template, trim_mode: '-')
+        box.eval(erb.src, locals={output: output})
       end
 
       def run
