@@ -8,26 +8,29 @@ module Actions
       end
 
       def run
-          events = TemplateInvocationEvent.find_by(template_invocation_id: input[:template_invocation_id])
-          sequence_id = events[-1].sequence_id
-          output_templates = template_invocation.job_invocation.output_templates
-          output_templates.each_with_index.map do |output_templ, templ_id|
-            sequence_id += 1
-            for i in 0..outputs-1 do
-              if events[i][:event].instance_of?(String) && events[i][:event_type] == 'stdout'
-                events << {
-                  sequence_id: sequence_id,
-                  template_invocation_id: templatef_invocation.id,
-                  event: process_proxy_template(events[i][:event], output_templ.template),
-                  timestamp: events[i][:timestamp] || Time.zone.now,
-                  event_type: 'template_output',
-                }
-              end
-              sequence_id += 1
+        processed_outputs = []
+        template_invocation = TemplateInvocation.find(input[:template_invocation_id])
+        events = template_invocation.template_invocation_events
+        sq_id = events.max_by { |e| e.sequence_id }.sequence_id + 1
+        output_templates = template_invocation.job_invocation.output_templates
+        output_templates.each_with_index.map do |output_templ, templ_id|
+          for i in 0..events.length-1 do
+            if events[i][:event].instance_of?(String) && events[i][:event_type] == 'stdout'
+              processed_outputs << {
+                sequence_id: sq_id,
+                template_invocation_id: template_invocation.id,
+                event: process_proxy_template(events[i][:event], output_templ.template),
+                timestamp: events[i][:timestamp] || Time.zone.now,
+                event_type: 'template_output',
+              }
+              sq_id += 1
             end
           end
-        end    
+        end
+        processed_outputs.each_slice(1000) do |batch|
+          TemplateInvocationEvent.upsert_all(batch, unique_by: [:template_invocation_id, :sequence_id]) # rubocop:disable Rails/SkipsModelValidations
+        end
+      end
     end
   end
 end
-  
