@@ -1,16 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Text, TextVariants, Form, Alert, SelectVariant } from '@patternfly/react-core';
+import { Text, TextVariants, Form, Alert, SelectVariant, FormGroup } from '@patternfly/react-core';
 import { SelectGQL } from '../HostsAndInputs/SelectGQL';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { SelectField } from '../form/SelectField';
 import { GroupedSelectField } from '../form/GroupedSelectField';
 import { WizardTitle } from '../form/WizardTitle';
-import { SearchSelect } from '../form/SearchSelect';
-import { WIZARD_TITLES, JOB_TEMPLATES, OUTPUT_TEMPLATES, outputTemplatesUrl } from '../../JobWizardConstants';
+import {
+  WIZARD_TITLES,
+  JOB_TEMPLATES,
+  OUTPUT_TEMPLATES,
+  outputTemplatesUrl,
+} from '../../JobWizardConstants';
 import { selectIsLoading } from '../../JobWizardSelectors';
 import { OutputSelect } from './searchOutputTemplates';
+import { SelectedTemplates } from './SelectedTemplates';
 
 export const CategoryAndTemplate = ({
   jobCategories,
@@ -98,14 +103,19 @@ export const CategoryAndTemplate = ({
           }
           placeholderText={allTemplatesError ? __('Error') : ''}
         />
-        <OutputSelect
-          selected={selectedOutputTemplates.output_templates}
-          setSelected={setSelectedOutputTemplates}
-          apiKey={OUTPUT_TEMPLATES}
-          name="output_templates"
-          url={outputTemplatesUrl}
-          placeholderText={__('Output templates')}
-        />
+        <FormGroup
+          label={__('Predefined output template')}
+          fildId="output_template"
+        >
+          <OutputSelect
+            selected={selectedOutputTemplates.output_templates}
+            setSelected={setSelectedOutputTemplates}
+            apiKey={OUTPUT_TEMPLATES}
+            name="output_templates"
+            url={outputTemplatesUrl}
+            placeholderText={__('Output templates')}
+          />
+        </FormGroup>
 
         {isError && (
           <Alert variant="danger" title={__('Errors:')}>
@@ -131,6 +141,12 @@ export const CategoryAndTemplate = ({
             )}
           </Alert>
         )}
+        <SelectedTemplates
+          selectedOutputTemplates={selectedOutputTemplates}
+          setOutputTemplates={setOutputTemplates}
+          // selectedRuntimeTemplates={}
+          // setSelectedRuntimeTemplates={}
+        />
       </Form>
     </>
   );
