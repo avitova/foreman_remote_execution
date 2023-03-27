@@ -15,7 +15,7 @@ class JobInvocationComposer
         :targeting => targeting(ui_params.fetch(:targeting, {})),
         :triggering => triggering,
         :host_ids => ui_params[:host_ids],
-        :output_template_ids => ui_params[:output_template_ids],
+        :output_template_ids => ui_params[:output_template_ids] || [],
         :remote_execution_feature_id => job_invocation_base[:remote_execution_feature_id],
         :description_format => job_invocation_base[:description_format],
         :ssh_user => blank_to_nil(job_invocation_base[:ssh_user]),
@@ -135,7 +135,7 @@ class JobInvocationComposer
         :execution_timeout_interval => api_params[:execution_timeout_interval] || template.execution_timeout_interval,
         :time_to_pickup => api_params[:time_to_pickup],
         :template_invocations => template_invocations_params,
-        :output_template_ids => api_params[:output_template_ids] }.with_indifferent_access
+        :output_template_ids => api_params[:output_template_ids] || [] }.with_indifferent_access
     end
 
     def remote_execution_feature_id
