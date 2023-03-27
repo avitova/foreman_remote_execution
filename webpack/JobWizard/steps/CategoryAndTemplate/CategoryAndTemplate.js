@@ -47,6 +47,7 @@ export const CategoryAndTemplate = ({
     });
   }
 
+  const [showEditor, setShowEditor] = useState(false);
   const [selectedRuntimeTemplates, setRuntimeTemplates] = useState([]);
   const setSelectedOutputTemplates = newSelected =>
     setOutputTemplates(prevSelected => ({
@@ -139,6 +140,22 @@ export const CategoryAndTemplate = ({
             )}
           </Alert>
         )}
+        <Button
+          variant="link"
+          isInline
+          onClick={() => {
+            setShowEditor(!showEditor);
+          }}
+        >
+          Add runtime output template
+        </Button>
+
+        <OutputTemplateModal
+          showEditor={showEditor}
+          setShowEditor={setShowEditor}
+          selectedRuntimeTemplates={selectedRuntimeTemplates}
+          setRuntimeTemplates={setRuntimeTemplates}
+        />
         <SelectedTemplates
           selectedOutputTemplates={selectedOutputTemplates}
           setOutputTemplates={setSelectedOutputTemplates}
