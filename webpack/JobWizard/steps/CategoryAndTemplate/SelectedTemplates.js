@@ -53,7 +53,8 @@ export const SelectedTemplates = ({
   setRuntimeTemplates,
 }) => {
   const clearAll = () => {
-    selectedOutputTemplates(() => []);
+    setOutputTemplates(() => []);
+    setRuntimeTemplates(() => []);
   };
   // const showClear = selectedOutputTemplates.output_templates.length;
   return (

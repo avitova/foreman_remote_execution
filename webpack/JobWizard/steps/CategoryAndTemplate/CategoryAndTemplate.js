@@ -15,7 +15,7 @@ import {
 import { selectIsLoading } from '../../JobWizardSelectors';
 import { OutputSelect } from './searchOutputTemplates';
 import { SelectedTemplates } from './SelectedTemplates';
-import OutputTemplateModal from './RuntimeTemplateModal';
+import { OutputTemplateTextField } from './OutputTemplateTextField';
 
 export const CategoryAndTemplate = ({
   jobCategories,
@@ -47,7 +47,6 @@ export const CategoryAndTemplate = ({
     });
   }
 
-  const [showEditor, setShowEditor] = useState(false);
   const [selectedRuntimeTemplates, setRuntimeTemplates] = useState([]);
   const setSelectedOutputTemplates = newSelected =>
     setOutputTemplates(prevSelected => ({
@@ -140,19 +139,7 @@ export const CategoryAndTemplate = ({
             )}
           </Alert>
         )}
-        <Button
-          variant="link"
-          isInline
-          onClick={() => {
-            setShowEditor(!showEditor);
-          }}
-        >
-          Add runtime output template
-        </Button>
-
-        <OutputTemplateModal
-          showEditor={showEditor}
-          setShowEditor={setShowEditor}
+        <OutputTemplateTextField
           selectedRuntimeTemplates={selectedRuntimeTemplates}
           setRuntimeTemplates={setRuntimeTemplates}
         />
