@@ -6,7 +6,7 @@ import { translate as __ } from 'foremanReact/common/I18n';
 const SelectedTemplate = ({ selected, setSelected, categoryName }) => {
   const deleteItem = itemToRemove => {
     setSelected(oldSelected =>
-      oldSelected.filter(({ id }) => id !== itemToRemove)
+      oldSelected.filter(item => item.id !== itemToRemove)
     );
   };
   return (
@@ -25,11 +25,32 @@ const SelectedTemplate = ({ selected, setSelected, categoryName }) => {
   );
 };
 
+const SelectedRuntimeTemplate = ({ selected, setSelected, categoryName }) => {
+  return (
+    <ChipGroup className="templates-chip-group" categoryName={categoryName}>
+      {selected.map((item, index) => (
+        <Chip
+          key={index}
+          id={`${categoryName}-${index}`}
+          onClick={() =>
+            setSelected(templates =>
+              templates.filter((_, selectedIndex) => index !== selectedIndex)
+            )
+          }
+          closeBtnAriaLabel={`Close ${item}`}
+        >
+          {item}
+        </Chip>
+      ))}
+    </ChipGroup>
+  );
+};
+
 export const SelectedTemplates = ({
   selectedOutputTemplates,
   setOutputTemplates,
-  //   selectedRuntimeTemplates,
-  //   selectedRuntimeTemplates,
+  selectedRuntimeTemplates,
+  setRuntimeTemplates,
 }) => {
   const clearAll = () => {
     selectedOutputTemplates(() => []);
@@ -42,11 +63,11 @@ export const SelectedTemplates = ({
         categoryName="Predefined templates"
         setSelected={setOutputTemplates}
       />
-      {/* <SelectedTemplate
-        selected={selectedHostCollections}
-        categoryName={hostMethods.hostCollections}
-        setSelected={setSelectedHostCollections}
-      /> */}
+      <SelectedRuntimeTemplate
+        selected={selectedRuntimeTemplates}
+        categoryName="Runtime templates"
+        setSelected={setRuntimeTemplates}
+      />
       <Button variant="link" className="clear-chips" onClick={clearAll}>
         {__('Clear filters')}
       </Button>
@@ -59,9 +80,19 @@ SelectedTemplates.propTypes = {
     output_templates: PropTypes.array.isRequired,
   }).isRequired,
   setOutputTemplates: PropTypes.func.isRequired,
+  selectedRuntimeTemplates: PropTypes.array.isRequired,
+  setRuntimeTemplates: PropTypes.func.isRequired,
 };
 
 SelectedTemplate.propTypes = {
+  categoryName: PropTypes.string.isRequired,
+  selected: PropTypes.shape({
+    output_templates: PropTypes.array.isRequired,
+  }).isRequired,
+  setSelected: PropTypes.func.isRequired,
+};
+
+SelectedRuntimeTemplate.propTypes = {
   categoryName: PropTypes.string.isRequired,
   selected: PropTypes.array.isRequired,
   setSelected: PropTypes.func.isRequired,

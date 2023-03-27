@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
-import { Text, TextVariants, Form, Alert, SelectVariant, FormGroup } from '@patternfly/react-core';
-import { SelectGQL } from '../HostsAndInputs/SelectGQL';
+import { Text, TextVariants, Form, Alert, FormGroup, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
 import { SelectField } from '../form/SelectField';
 import { GroupedSelectField } from '../form/GroupedSelectField';
@@ -16,6 +15,7 @@ import {
 import { selectIsLoading } from '../../JobWizardSelectors';
 import { OutputSelect } from './searchOutputTemplates';
 import { SelectedTemplates } from './SelectedTemplates';
+import OutputTemplateModal from './RuntimeTemplateModal';
 
 export const CategoryAndTemplate = ({
   jobCategories,
@@ -47,6 +47,7 @@ export const CategoryAndTemplate = ({
     });
   }
 
+  const [selectedRuntimeTemplates, setRuntimeTemplates] = useState([]);
   const setSelectedOutputTemplates = newSelected =>
     setOutputTemplates(prevSelected => ({
       ...prevSelected,
@@ -103,10 +104,7 @@ export const CategoryAndTemplate = ({
           }
           placeholderText={allTemplatesError ? __('Error') : ''}
         />
-        <FormGroup
-          label={__('Predefined output template')}
-          fildId="output_template"
-        >
+        <FormGroup label={__('Output templates')} fieldId="output_template">
           <OutputSelect
             selected={selectedOutputTemplates.output_templates}
             setSelected={setSelectedOutputTemplates}
@@ -143,9 +141,9 @@ export const CategoryAndTemplate = ({
         )}
         <SelectedTemplates
           selectedOutputTemplates={selectedOutputTemplates}
-          setOutputTemplates={setOutputTemplates}
-          // selectedRuntimeTemplates={}
-          // setSelectedRuntimeTemplates={}
+          setOutputTemplates={setSelectedOutputTemplates}
+          selectedRuntimeTemplates={selectedRuntimeTemplates}
+          setRuntimeTemplates={setRuntimeTemplates}
         />
       </Form>
     </>
