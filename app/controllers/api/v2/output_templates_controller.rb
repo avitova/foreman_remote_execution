@@ -11,7 +11,7 @@ module Api
       param_group :taxonomy_scope, ::Api::V2::BaseController
       param_group :search_and_pagination, ::Api::V2::BaseController
       def index
-        @output_templates = resource_scope_for_index
+        @output_templates = resource_scope_for_index.filter{|template| !template.snippet}
       end
 
       def_param_group :output_template do

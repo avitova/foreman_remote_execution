@@ -33,8 +33,8 @@ export const filterOutputTemplates = templates =>
   templates?.filter(template => !template.snippet) || [];
 
 export const selectOutputTemplates = state =>
-  filterJobTemplates(selectAPIResponse(state, OUTPUT_TEMPLATES)?.results) ||
-  filterJobTemplates(selectAPIResponse(state, OUTPUT_TEMPLATES));
+  filterOutputTemplates(selectAPIResponse(state, OUTPUT_TEMPLATES)?.results) ||
+  filterOutputTemplates(selectAPIResponse(state, OUTPUT_TEMPLATES));
 
 export const selectOutputTemplatesStatus = state =>
   selectAPIStatus(state, OUTPUT_TEMPLATES);

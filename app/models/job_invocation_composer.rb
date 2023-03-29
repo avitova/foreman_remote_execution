@@ -10,12 +10,13 @@ class JobInvocationComposer
     end
 
     def params
-      # 1 Add from ui to params
+      # 1 Add from ui to params job_invocation.output_templates.build(:template => params[:runtime_templates][1])
       { :job_category => job_invocation_base[:job_category],
         :targeting => targeting(ui_params.fetch(:targeting, {})),
         :triggering => triggering,
         :host_ids => ui_params[:host_ids],
         :output_template_ids => ui_params[:output_template_ids] || [],
+        :runtime_templates => ui_params[:runtime_templates] || [],
         :remote_execution_feature_id => job_invocation_base[:remote_execution_feature_id],
         :description_format => job_invocation_base[:description_format],
         :ssh_user => blank_to_nil(job_invocation_base[:ssh_user]),
@@ -135,6 +136,7 @@ class JobInvocationComposer
         :execution_timeout_interval => api_params[:execution_timeout_interval] || template.execution_timeout_interval,
         :time_to_pickup => api_params[:time_to_pickup],
         :template_invocations => template_invocations_params,
+        :runtime_templates => api_params[:runtime_templates] || [],
         :output_template_ids => api_params[:output_template_ids] || [] }.with_indifferent_access
     end
 
@@ -439,12 +441,14 @@ class JobInvocationComposer
   end
 
   def build_output_templates
-    # TODO validate
-    # TODO add output templates defined in the Wizard
     temp = []
     params[:output_template_ids].map do |output_t|
-      #job_invocation.output_templates.build(:id => output_t)
       job_invocation.output_templates << OutputTemplate.find(output_t)
+      temp
+    end
+    params[:runtime_templates].map.with_index do |output_t, index|
+      name = DateTime.now.to_i.to_s + " runtime template " + index.to_s
+      job_invocation.output_templates.build(:template => output_t, :name => name, :snippet => true)
       temp
     end
   end

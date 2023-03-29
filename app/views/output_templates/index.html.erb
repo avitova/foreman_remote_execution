@@ -16,17 +16,19 @@
   </thead>
   <tbody>
     <% for output_template in @templates %>
-      <tr>
-        <td class="display-two-pane ellipsis"><%= link_to_if_authorized output_template,
-                                                               hash_for_edit_output_template_path(:id => output_template).merge(:auth_object => output_template, :authorizer => authorizer) %></td>
-        <td align='center'><%= checked_icon output_template.snippet %></td>
-        <td align='center'>
-          <%= locked_icon output_template.locked?, _("This template is locked for editing.") %>
-        </td>
-        <td>
-          <%= action_buttons(*permitted_actions(output_template)) %>
-        </td>
-      </tr>
+      <% if !output_template.snippet %>
+        <tr>
+          <td class="display-two-pane ellipsis"><%= link_to_if_authorized output_template,
+                                                                hash_for_edit_output_template_path(:id => output_template).merge(:auth_object => output_template, :authorizer => authorizer) %></td>
+          <td align='center'><%= checked_icon output_template.snippet %></td>
+          <td align='center'>
+            <%= locked_icon output_template.locked?, _("This template is locked for editing.") %>
+          </td>
+          <td>
+            <%= action_buttons(*permitted_actions(output_template)) %>
+          </td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

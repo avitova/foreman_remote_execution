@@ -49,6 +49,7 @@ export const JobWizard = ({ rerunData }) => {
   const [selectedOutputTemplates, setOutputTemplates] = useState({
     output_templates: [],
   });
+  const [runtimeTemplates, setRuntimeTemplates] = useState([]);
 
   const [category, setCategory] = useState(
     rerunData?.job_category || jobCategoriesResponse?.default_category || ''
@@ -250,6 +251,8 @@ export const JobWizard = ({ rerunData }) => {
           setJobTemplate={setJobTemplateID}
           outputTemplates={selectedOutputTemplates}
           setOutputTemplates={setOutputTemplates}
+          runtimeTemplates={runtimeTemplates}
+          setRuntimeTemplates={setRuntimeTemplates}
           category={category}
           setCategory={setCategory}
           isCategoryPreselected={
@@ -444,6 +447,7 @@ export const JobWizard = ({ rerunData }) => {
           submit({
             jobTemplateID,
             selectedOutputTemplates,
+            runtimeTemplates,
             templateValues,
             advancedValues,
             scheduleValue,
