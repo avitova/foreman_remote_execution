@@ -16,10 +16,15 @@ module Actions
         output_templates.each_with_index.map do |output_templ, templ_id|
           for i in 0..events.length-1 do
             if events[i][:event].instance_of?(String) && events[i][:event_type] == 'stdout'
+              begin
+                processed_template = process_proxy_template(events[i][:event], output_templ.template)
+              rescue => e
+                processed_template = e.message
+              end
               processed_outputs << {
                 sequence_id: sq_id,
                 template_invocation_id: template_invocation.id,
-                event: process_proxy_template(events[i][:event], output_templ.template),
+                event: processed_template,
                 timestamp: events[i][:timestamp] || Time.zone.now,
                 event_type: 'template_output',
               }

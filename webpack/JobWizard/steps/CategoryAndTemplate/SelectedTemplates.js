@@ -56,7 +56,6 @@ export const SelectedTemplates = ({
     setOutputTemplates(() => []);
     setRuntimeTemplates(() => []);
   };
-  // const showClear = selectedOutputTemplates.output_templates.length;
   return (
     <div className="selected-chips">
       <SelectedTemplate
