@@ -21,8 +21,10 @@ export const CategoryAndTemplate = ({
   jobCategories,
   jobTemplates,
   selectedOutputTemplates,
+  runtimeTemplates,
   setJobTemplate,
   setOutputTemplates,
+  setRuntimeTemplates,
   selectedTemplateID,
   selectedCategory,
   setCategory,
@@ -47,7 +49,6 @@ export const CategoryAndTemplate = ({
     });
   }
 
-  const [selectedRuntimeTemplates, setRuntimeTemplates] = useState([]);
   const setSelectedOutputTemplates = newSelected =>
     setOutputTemplates(prevSelected => ({
       ...prevSelected,
@@ -140,13 +141,13 @@ export const CategoryAndTemplate = ({
           </Alert>
         )}
         <OutputTemplateTextField
-          selectedRuntimeTemplates={selectedRuntimeTemplates}
+          runtimeTemplates={runtimeTemplates}
           setRuntimeTemplates={setRuntimeTemplates}
         />
         <SelectedTemplates
           selectedOutputTemplates={selectedOutputTemplates}
           setOutputTemplates={setSelectedOutputTemplates}
-          selectedRuntimeTemplates={selectedRuntimeTemplates}
+          runtimeTemplates={runtimeTemplates}
           setRuntimeTemplates={setRuntimeTemplates}
         />
       </Form>
@@ -160,8 +161,10 @@ CategoryAndTemplate.propTypes = {
   selectedOutputTemplates: PropTypes.shape({
     output_templates: PropTypes.array.isRequired,
   }).isRequired,
+  runtimeTemplates: PropTypes.array.isRequired,
   setJobTemplate: PropTypes.func.isRequired,
   setOutputTemplates: PropTypes.func.isRequired,
+  setRuntimeTemplates: PropTypes.func.isRequired,
   selectedTemplateID: PropTypes.number,
   setCategory: PropTypes.func.isRequired,
   selectedCategory: PropTypes.string,

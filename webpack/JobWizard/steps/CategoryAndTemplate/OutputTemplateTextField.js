@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Button } from 'patternfly-react';
-import { FormGroup, TextArea } from '@patternfly/react-core';
+import { FormGroup, TextArea, Button } from '@patternfly/react-core';
 import PropTypes from 'prop-types';
 
 export const OutputTemplateTextField = ({
-  selectedRuntimeTemplates,
+  runtimeTemplates,
   setRuntimeTemplates,
 }) => {
   const [template, setTemplate] = useState('');
@@ -28,6 +27,6 @@ export const OutputTemplateTextField = ({
 };
 
 OutputTemplateTextField.propTypes = {
-  selectedRuntimeTemplates: PropTypes.array.isRequired,
+  runtimeTemplates: PropTypes.array.isRequired,
   setRuntimeTemplates: PropTypes.func.isRequired,
 };

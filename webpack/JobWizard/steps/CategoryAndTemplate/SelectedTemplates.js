@@ -49,7 +49,7 @@ const SelectedRuntimeTemplate = ({ selected, setSelected, categoryName }) => {
 export const SelectedTemplates = ({
   selectedOutputTemplates,
   setOutputTemplates,
-  selectedRuntimeTemplates,
+  runtimeTemplates,
   setRuntimeTemplates,
 }) => {
   const clearAll = () => {
@@ -65,7 +65,7 @@ export const SelectedTemplates = ({
         setSelected={setOutputTemplates}
       />
       <SelectedRuntimeTemplate
-        selected={selectedRuntimeTemplates}
+        selected={runtimeTemplates}
         categoryName="Runtime templates"
         setSelected={setRuntimeTemplates}
       />
@@ -81,7 +81,7 @@ SelectedTemplates.propTypes = {
     output_templates: PropTypes.array.isRequired,
   }).isRequired,
   setOutputTemplates: PropTypes.func.isRequired,
-  selectedRuntimeTemplates: PropTypes.array.isRequired,
+  runtimeTemplates: PropTypes.array.isRequired,
   setRuntimeTemplates: PropTypes.func.isRequired,
 };
 

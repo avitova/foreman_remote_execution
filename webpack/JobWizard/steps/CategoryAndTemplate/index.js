@@ -30,6 +30,8 @@ const ConnectedCategoryAndTemplate = ({
   isCategoryPreselected,
   outputTemplates,
   setOutputTemplates,
+  runtimeTemplates,
+  setRuntimeTemplates,
 }) => {
   const dispatch = useDispatch();
 
@@ -110,6 +112,8 @@ const ConnectedCategoryAndTemplate = ({
       selectedCategory={category}
       selectedOutputTemplates={outputTemplates}
       setOutputTemplates={setOutputTemplates}
+      runtimeTemplates={runtimeTemplates}
+      setRuntimeTemplates={setRuntimeTemplates}
       errors={errors}
     />
   );
@@ -125,6 +129,8 @@ ConnectedCategoryAndTemplate.propTypes = {
     output_templates: PropTypes.array.isRequired,
   }).isRequired,
   setOutputTemplates: PropTypes.func.isRequired,
+  runtimeTemplates: PropTypes.array.isRequired,
+  setRuntimeTemplates: PropTypes.func.isRequired,
 };
 ConnectedCategoryAndTemplate.defaultProps = {
   jobTemplate: null,
