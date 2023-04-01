@@ -1,19 +1,22 @@
 class OutputTemplatesController < ::TemplatesController
     include ::Foreman::Controller::Parameters::OutputTemplate
 
-    def load_vars_from_template
-      return unless @output_template
-    end
+    def import
+      contents = params.fetch(:imported_template, {}).fetch(:template, nil).try(:read)
 
-    # private
-
-    def find_resource
-      if params[:id]
-        super
+      @template = OutputTemplate.import_raw(contents, :update => ActiveRecord::Type::Boolean.new.deserialize(params[:imported_template][:overwrite]))
+      if @template&.save
+        flash[:success] = _('Output template imported successfully.')
+        redirect_to output_templates_path(:search => "name = \"#{@template.name}\"")
       else
-        @output_template = resource_class.new(params[type_name_plural])
+        @template ||= OutputTemplate.import_raw(contents, :build_new => true)
+        @template.valid?
+        flash[:warning] = _('Unable to save template. Correct highlighted errors')
+        render :action => 'new'
       end
     end
+
+    private
 
     def action_permission
         super

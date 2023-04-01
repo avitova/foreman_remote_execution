@@ -43,6 +43,17 @@ module Api
       def destroy
         process_response @output_template.destroy
       end
+
+      api :POST, '/output_templates/import', N_('Import an output template from ERB')
+      param :template, String, :required => true, :desc => N_('Template ERB')
+      param :overwrite, :bool, :required => false, :desc => N_('Overwrite template if it already exists')
+      def import
+        options = params[:overwrite] ? { :update => true } : { :build_new => true }
+
+        @output_template = OutputTemplate.import_raw(params[:template], options)
+        @output_template ||= OutputTemplate.new
+        process_response @output_template.save
+      end
     end
   end
 end
