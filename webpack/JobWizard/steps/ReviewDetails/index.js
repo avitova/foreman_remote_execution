@@ -14,7 +14,6 @@ import { get } from 'foremanReact/redux/API';
 import { translate as __ } from 'foremanReact/common/I18n';
 import {
   selectJobTemplates,
-  selectOutputTemplates,
   selectHosts,
   selectHostCount,
   selectTemplateInputs,
@@ -34,7 +33,8 @@ import { HostPreviewModal } from '../HostsAndInputs/HostPreviewModal';
 const ReviewDetails = ({
   jobCategory,
   jobTemplateID,
-  outputTemplateID,
+  selectedOutputTemplates,
+  runtimeTemplates,
   advancedValues,
   scheduleValue,
   templateValues,
@@ -73,10 +73,6 @@ const ReviewDetails = ({
   const jobTemplate = jobTemplates.find(
     template => template.id === jobTemplateID
   )?.name;
-  const outputTemplates = useSelector(selectOutputTemplates);
-  const outputTemplate = outputTemplates.find(
-    template => template.id === outputTemplateID
-  )?.name;
 
   const hosts = useSelector(selectHosts);
 
@@ -102,6 +98,25 @@ const ReviewDetails = ({
       </div>
     );
   };
+  const stringOutputTemplates = () => {
+    const outputTemplatesTotal =
+      selectedOutputTemplates.output_templates.length + runtimeTemplates.length;
+    if (outputTemplatesTotal === 0) {
+      return __('No Output Templates');
+    }
+    if (
+      (outputTemplatesTotal === 1 || outputTemplatesTotal === 2) &&
+      outputTemplatesTotal === selectedOutputTemplates.output_templates.length
+    ) {
+      return selectedOutputTemplates.output_templates
+        .map(t => t.name)
+        .join(', ');
+    }
+    if (runtimeTemplates.length === 1 && outputTemplatesTotal === 1) {
+      return runtimeTemplates[0];
+    }
+    return outputTemplatesTotal + __(' templates selected');
+  };
   const [isAdvancedShown, setIsAdvancedShown] = useState(false);
   const detailsFirstHalf = [
     {
@@ -126,7 +141,7 @@ const ReviewDetails = ({
           {__('Output template')}
         </StepButton>
       ),
-      value: outputTemplate,
+      value: stringOutputTemplates(),
     },
     {
       label: (
@@ -337,7 +352,10 @@ const ReviewDetails = ({
 ReviewDetails.propTypes = {
   jobCategory: PropTypes.string.isRequired,
   jobTemplateID: PropTypes.number,
-  outputTemplateID: PropTypes.number,
+  selectedOutputTemplates: PropTypes.shape({
+    output_templates: PropTypes.array.isRequired,
+  }).isRequired,
+  runtimeTemplates: PropTypes.array.isRequired,
   advancedValues: PropTypes.object.isRequired,
   scheduleValue: PropTypes.object.isRequired,
   templateValues: PropTypes.object.isRequired,

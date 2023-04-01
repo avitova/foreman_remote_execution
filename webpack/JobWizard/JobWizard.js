@@ -407,7 +407,8 @@ export const JobWizard = ({ rerunData }) => {
         <ReviewDetails
           jobCategory={category}
           jobTemplateID={jobTemplateID}
-          outputTemplates={selectedOutputTemplates}
+          selectedOutputTemplates={selectedOutputTemplates}
+          runtimeTemplates={runtimeTemplates}
           advancedValues={advancedValues}
           scheduleValue={scheduleValue}
           templateValues={templateValues}
