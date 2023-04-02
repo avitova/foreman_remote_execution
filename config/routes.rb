@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  # This file
   resources :job_templates, :except => [:show] do
     member do
       get 'clone_template'

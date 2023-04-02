@@ -8,8 +8,8 @@ class TemplateInvocationsController < ApplicationController
   def show
     @template_invocation = TemplateInvocation.find(params[:id])
     raise ActiveRecord::RecordNotFound unless User.current.can?(:view_job_invocations, @template_invocation.job_invocation)
-    @template_invocation_task = @template_invocation.run_host_job_task
 
+    @template_invocation_task = @template_invocation.run_host_job_task
     @host = @template_invocation.host
     @auto_refresh = @template_invocation_task.pending?
     @since = params[:since].to_f if params[:since].present?

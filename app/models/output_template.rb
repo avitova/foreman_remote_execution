@@ -48,4 +48,8 @@ class OutputTemplate < ::Template
       end
     end
   end
+
+  def default_input_values(ignore_keys)
+    return {}
+  end
 end

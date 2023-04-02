@@ -1,10 +1,16 @@
 module Actions
   module RemoteExecution
     class OutputProcessing < Dynflow::Action
-      def process_proxy_template(output, template)
-        box = Safemode::Box.new
-        erb = ERB.new(template, trim_mode: '-')
-        box.eval(erb.src, locals={output: output})
+
+      def process_proxy_template(output, template, invocation)
+        base = Host.authorized(:view_hosts, Host)
+        host = base.find(invocation.host_id)
+        renderer = InputTemplateRenderer.new(template, host, invocation, nil, false, [], output)
+        processed_output = renderer.render
+        if !processed_output
+          return renderer.error_message.html_safe
+        end
+        return processed_output
       end
 
       def run
@@ -16,15 +22,10 @@ module Actions
         output_templates.each_with_index.map do |output_templ, templ_id|
           for i in 0..events.length-1 do
             if events[i][:event].instance_of?(String) && events[i][:event_type] == 'stdout'
-              begin
-                processed_template = process_proxy_template(events[i][:event], output_templ.template)
-              rescue => e
-                processed_template = e.message
-              end
               processed_outputs << {
                 sequence_id: sq_id,
                 template_invocation_id: template_invocation.id,
-                event: processed_template,
+                event: process_proxy_template(events[i][:event], output_templ, template_invocation),
                 timestamp: events[i][:timestamp] || Time.zone.now,
                 event_type: 'template_output',
               }
