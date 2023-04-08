@@ -185,9 +185,10 @@ module Actions
         property :task, object_of: 'Task', desc: 'Returns the task to which this action belongs'
         property :job_invocation_id, Integer, desc: "Returns the id of the job invocation"
         property :job_invocation, object_of: 'JobInvocation', desc: "Returns the job invocation"
+        property :output, String, desc: "Returns the output of the template invocation"
       end
       class Jail < ::Actions::ObservableAction::Jail
-        allow :job_invocation_id, :job_invocation
+        allow :job_invocation_id, :job_invocation, :output
       end
     end
   end
