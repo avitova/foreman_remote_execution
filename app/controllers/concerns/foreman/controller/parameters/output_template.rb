@@ -27,4 +27,3 @@ module Foreman::Controller::Parameters::OutputTemplate
     self.class.output_template_params_filter.filter_params(params, parameter_filter_context, :output_template)
   end
 end
-  

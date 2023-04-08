@@ -69,7 +69,7 @@ export const SelectedTemplates = ({
         setSelected={setRuntimeTemplates}
       />
       <Button variant="link" className="clear-chips" onClick={clearAll}>
-        {__('Clear filters')}
+        {__('Clear templates')}
       </Button>
     </div>
   );

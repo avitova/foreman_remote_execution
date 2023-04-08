@@ -10,7 +10,7 @@ class JobInvocationComposer
     end
 
     def params
-      # 1 Add from ui to params job_invocation.output_templates.build(:template => params[:runtime_templates][1])
+      # Add the params from the wizard
       { :job_category => job_invocation_base[:job_category],
         :targeting => targeting(ui_params.fetch(:targeting, {})),
         :triggering => triggering,
@@ -122,7 +122,7 @@ class JobInvocationComposer
     end
 
     def params
-      #2
+      # Add the params from API
       { :job_category => template.job_category,
         :targeting => targeting_params,
         :triggering => triggering_params,
@@ -447,6 +447,7 @@ class JobInvocationComposer
       temp
     end
     params[:runtime_templates].map.with_index do |output_t, index|
+      # Runtime templates need unique name
       name = DateTime.now.to_i.to_s + " runtime template " + index.to_s
       job_invocation.output_templates.build(:template => output_t, :name => name, :snippet => true)
       temp

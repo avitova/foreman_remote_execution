@@ -68,7 +68,7 @@ module Actions
                                :alternative_names => provider.alternative_names(host) }
         action_options = provider.proxy_command_options(template_invocation, host)
                                  .merge(additional_options)
-
+        # Defines the order between planned actions.
         sequence do
           plan_delegated_action(proxy, provider.proxy_action_class, action_options, proxy_action_class: ::Actions::RemoteExecution::ProxyAction)
           plan_self :with_event_logging => true
