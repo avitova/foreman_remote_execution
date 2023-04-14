@@ -65,7 +65,11 @@ end
       <div class="tab-pane" id="processed">
         <% for processed_output in @template_output_sets%>
           <div class="terminal" data-refresh-url="<%= template_invocation_path(@template_invocation) %>">
+            <% if processed_output['output_type'] == "template_output_err" %>
+              <div class="line error">
+            <% else %>
               <div class="printable">
+            <% end %>
                 <% @line_counter = 0 %>
                 <%= render :partial => 'output_line_set', :collection => normalize_line_sets([processed_output]) %>
               </div>

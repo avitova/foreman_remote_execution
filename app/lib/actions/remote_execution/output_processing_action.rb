@@ -8,9 +8,9 @@ module Actions
         renderer = InputTemplateRenderer.new(template, host, invocation, nil, false, [], output)
         processed_output = renderer.render
         if !processed_output
-          return renderer.error_message.html_safe
+          return renderer.error_message.html_safe, false
         end
-        return processed_output
+        return processed_output, true
       end
 
       def run
@@ -22,12 +22,13 @@ module Actions
         output_templates.each_with_index.map do |output_templ, templ_id|
           for i in 0..events.length-1 do
             if events[i][:event].instance_of?(String) && events[i][:event_type] == 'stdout'
+              output, success = process_proxy_template(events[i][:event], output_templ, template_invocation)
               processed_outputs << {
                 sequence_id: sq_id,
                 template_invocation_id: template_invocation.id,
-                event: process_proxy_template(events[i][:event], output_templ, template_invocation),
+                event: output,
                 timestamp: events[i][:timestamp] || Time.zone.now,
-                event_type: 'template_output',
+                event_type: success ? 'template_output' : 'template_output_err',
               }
               sq_id += 1
             end
