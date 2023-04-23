@@ -21,6 +21,7 @@ class InputTemplateRenderer
     @template_input_values = input_values
     @preview = preview
     @templates_stack = templates_stack + [template]
+    # gives templates the access to the output variable
     @output = output
   end
 

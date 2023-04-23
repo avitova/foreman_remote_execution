@@ -17,6 +17,7 @@ end
 <% javascript 'foreman_remote_execution/template_invocation' %>
 
 <div id="template-invocations-show" class="row">
+  <%# add tab to template invocation show page %>
   <ul id="template-invocations-show-tabs" class="nav nav-tabs">
     <li class="active"><a href="#results" data-toggle="tab"><%= _('Results') %></a></li>
     <% unless @template_output_sets.empty? %>
@@ -63,13 +64,14 @@ end
         </div>
       </div>
       <div class="tab-pane" id="processed">
-        <% for processed_output in @template_output_sets%>
+        <% for processed_output in @template_output_sets %>
           <div class="terminal" data-refresh-url="<%= template_invocation_path(@template_invocation) %>">
             <% if processed_output['output_type'] == "template_output_err" %>
               <div class="line error">
             <% else %>
               <div class="printable">
             <% end %>
+                <%# separate each processed output and prepend line numbers %>
                 <% @line_counter = 0 %>
                 <%= render :partial => 'output_line_set', :collection => normalize_line_sets([processed_output]) %>
               </div>

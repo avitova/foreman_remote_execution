@@ -4,6 +4,7 @@ module Actions
 
       def process_proxy_template(output, template, invocation)
         base = Host.authorized(:view_hosts, Host)
+        # provide host information for the output template rendering
         host = base.find(invocation.host_id)
         renderer = InputTemplateRenderer.new(template, host, invocation, nil, false, [], output)
         processed_output = renderer.render
@@ -30,6 +31,7 @@ module Actions
                 timestamp: events[i][:timestamp] || Time.zone.now,
                 event_type: success ? 'template_output' : 'template_output_err',
               }
+              # template invocation id and a sequence combination has to be unique
               sq_id += 1
             end
           end

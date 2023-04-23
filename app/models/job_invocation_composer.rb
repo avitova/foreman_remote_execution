@@ -10,7 +10,6 @@ class JobInvocationComposer
     end
 
     def params
-      # Add the params from the wizard
       { :job_category => job_invocation_base[:job_category],
         :targeting => targeting(ui_params.fetch(:targeting, {})),
         :triggering => triggering,
@@ -122,7 +121,6 @@ class JobInvocationComposer
     end
 
     def params
-      # Add the params from API
       { :job_category => template.job_category,
         :targeting => targeting_params,
         :triggering => triggering_params,
@@ -441,20 +439,19 @@ class JobInvocationComposer
   end
 
   def build_output_templates
-    temp = []
     params[:output_template_ids].map do |output_t|
       job_invocation.output_templates << OutputTemplate.find(output_t)
-      temp
     end
     params[:runtime_templates].map.with_index do |output_t, index|
       # Runtime templates need unique name
       name = DateTime.now.to_i.to_s + " runtime template " + index.to_s
+      # runtime template are not yet saved, they have to be built
       job_invocation.output_templates.build(:template => output_t, :name => name, :snippet => true)
-      temp
     end
   end
 
   def trigger(raise_on_error = false)
+    # starts the job invocation Dynflow action
     generate_description
     if raise_on_error
       save!

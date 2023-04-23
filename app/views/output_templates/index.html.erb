@@ -17,6 +17,7 @@
   <tbody>
     <% for output_template in @templates %>
       <% if !output_template.snippet %>
+        <%# do not show runtime templates %>
         <tr>
           <td class="display-two-pane ellipsis"><%= link_to_if_authorized output_template,
                                                                 hash_for_edit_output_template_path(:id => output_template).merge(:auth_object => output_template, :authorizer => authorizer) %></td>

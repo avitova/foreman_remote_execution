@@ -28,7 +28,6 @@ Rails.application.routes.draw do
       post 'preview'
       post 'import'
       get 'auto_complete_search'
-      get 'auto_complete_output_category'
     end
   end
 

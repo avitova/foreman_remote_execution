@@ -194,7 +194,6 @@ module ForemanRemoteExecution
           permission :filter_autocompletion_for_template_invocation, { :template_invocations => [ :auto_complete_search, :index ] },
             :resource_type => 'TemplateInvocation'
           permission :cockpit_hosts, { 'cockpit' => [:redirect, :host_ssh_params] }, :resource_type => 'Host'
-          ##add line for output template
         end
 
         USER_PERMISSIONS = [

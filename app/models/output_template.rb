@@ -24,6 +24,7 @@ class OutputTemplate < ::Template
     end
     table_name = 'templates'
 
+    # allows importing templates in the controller
     def import_raw(contents, options = {})
       metadata = Template.parse_metadata(contents)
       import_parsed(metadata['name'], contents, metadata, options)

@@ -8,9 +8,12 @@ module Api
 
 
       api :GET, '/output_templates/', N_('List output templates')
+      # location and Organization
       param_group :taxonomy_scope, ::Api::V2::BaseController
+      # search and pagination allows to display and filter the index page of templates
       param_group :search_and_pagination, ::Api::V2::BaseController
       def index
+        # do not show saved runtime templates
         @output_templates = resource_scope_for_index.filter{|template| !template.snippet}
       end
 

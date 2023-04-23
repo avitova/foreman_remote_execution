@@ -188,6 +188,7 @@ module Actions
         property :output, String, desc: "Returns the output of the template invocation"
       end
       class Jail < ::Actions::ObservableAction::Jail
+        # enables variables in the template
         allow :job_invocation_id, :job_invocation, :output
       end
     end

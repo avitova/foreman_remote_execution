@@ -25,26 +25,25 @@ const SelectedTemplate = ({ selected, setSelected, categoryName }) => {
   );
 };
 
-const SelectedRuntimeTemplate = ({ selected, setSelected, categoryName }) => {
-  return (
-    <ChipGroup className="templates-chip-group" categoryName={categoryName}>
-      {selected.map((item, index) => (
-        <Chip
-          key={index}
-          id={`${categoryName}-${index}`}
-          onClick={() =>
-            setSelected(templates =>
-              templates.filter((_, selectedIndex) => index !== selectedIndex)
-            )
-          }
-          closeBtnAriaLabel={`Close ${item}`}
-        >
-          {item}
-        </Chip>
-      ))}
-    </ChipGroup>
-  );
-};
+const SelectedRuntimeTemplate = ({ selected, setSelected, categoryName }) => (
+  <ChipGroup className="templates-chip-group" categoryName={categoryName}>
+    {selected.map((item, index) => (
+      /* runtime templates do not have an id, as they are not yet saved in db */
+      <Chip
+        key={index}
+        id={`${categoryName}-${index}`}
+        onClick={() =>
+          setSelected(templates =>
+            templates.filter((_, selectedIndex) => index !== selectedIndex)
+          )
+        }
+        closeBtnAriaLabel={`Close ${item}`}
+      >
+        {item}
+      </Chip>
+    ))}
+  </ChipGroup>
+);
 
 export const SelectedTemplates = ({
   selectedOutputTemplates,
