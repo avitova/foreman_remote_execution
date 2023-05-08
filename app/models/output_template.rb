@@ -16,6 +16,9 @@ class OutputTemplate < ::Template
   has_many :job_invocation_templates, dependent: :destroy
   has_many :job_invocations, through: :job_invocation_templates
 
+  has_many :job_template_output_templates, dependent: :destroy
+  has_many :job_templates, through: :job_template_output_templates
+
   class << self
     # we have to override the base_class because polymorphic associations does not detect it correctly, more details at
     # http://apidock.com/rails/ActiveRecord/Associations/ClassMethods/has_many#1010-Polymorphic-has-many-within-inherited-class-gotcha
