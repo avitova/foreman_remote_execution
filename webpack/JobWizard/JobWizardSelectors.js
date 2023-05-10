@@ -75,6 +75,9 @@ export const selectEffectiveUser = state =>
 export const selectAdvancedTemplateInputs = state =>
   selectAPIResponse(state, JOB_TEMPLATE).advanced_template_inputs || [];
 
+export const selectDefaultOutputTemplates = state =>
+  selectAPIResponse(state, JOB_TEMPLATE).default_output_templates || [];
+
 export const selectTemplateInputs = state =>
   selectAPIResponse(state, JOB_TEMPLATE).template_inputs || [];
 

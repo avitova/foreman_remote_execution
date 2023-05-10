@@ -218,6 +218,7 @@ export const JobWizard = ({ rerunData }) => {
     setSelectedTargets,
     setHostsSearchQuery,
     setJobTemplateID,
+    setOutputTemplates,
     setTemplateValues,
     setAdvancedValues,
   });
@@ -492,6 +493,7 @@ JobWizard.propTypes = {
         input_values: PropTypes.array,
       })
     ),
+    output_templates: PropTypes.array,
     inputs: PropTypes.object,
     description_format: PropTypes.string,
   }),

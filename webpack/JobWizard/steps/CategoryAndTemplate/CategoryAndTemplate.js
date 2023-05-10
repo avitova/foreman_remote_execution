@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Text, TextVariants, Form, Alert, FormGroup, Button } from '@patternfly/react-core';
 import { translate as __ } from 'foremanReact/common/I18n';
+import { get } from 'foremanReact/redux/API';
 import { SelectField } from '../form/SelectField';
 import { GroupedSelectField } from '../form/GroupedSelectField';
 import { WizardTitle } from '../form/WizardTitle';
 import {
   WIZARD_TITLES,
   JOB_TEMPLATES,
+  JOB_TEMPLATE,
   OUTPUT_TEMPLATES,
   outputTemplatesUrl,
 } from '../../JobWizardConstants';
@@ -30,6 +32,7 @@ export const CategoryAndTemplate = ({
   setCategory,
   errors,
 }) => {
+  const dispatch = useDispatch();
   const templatesGroups = {};
   const isTemplatesLoading = useSelector(state =>
     selectIsLoading(state, JOB_TEMPLATES)
@@ -49,12 +52,6 @@ export const CategoryAndTemplate = ({
     });
   }
 
-  const setSelectedOutputTemplates = newSelected =>
-    setOutputTemplates(prevSelected => ({
-      ...prevSelected,
-      output_templates: newSelected(prevSelected.output_templates),
-    }));
-
   const selectedTemplate = jobTemplates.find(
     template => template.id === selectedTemplateID
   )?.name;
@@ -62,7 +59,24 @@ export const CategoryAndTemplate = ({
   const onSelectCategory = newCategory => {
     if (selectedCategory !== newCategory) {
       setCategory(newCategory);
-      setJobTemplate(null);
+      onSelectJobTemplate(null);
+    }
+  };
+
+  const onSelectJobTemplate = newJobTemplateID => {
+    if (selectedTemplateID !== newJobTemplateID) {
+      setJobTemplate(newJobTemplateID);
+      if (newJobTemplateID) {
+        dispatch(
+          get({
+            key: JOB_TEMPLATE,
+            url: `/ui_job_wizard/template/${newJobTemplateID}`,
+            handleSuccess: ({ data }) => {
+              if (data) setOutputTemplates(data.default_output_templates || []);
+            },
+          })
+        );
+      }
     }
   };
 
@@ -98,7 +112,7 @@ export const CategoryAndTemplate = ({
           label={__('Job template')}
           fieldId="job_template"
           groups={Object.values(templatesGroups)}
-          setSelected={setJobTemplate}
+          setSelected={onSelectJobTemplate}
           selected={isTemplatesLoading ? [] : selectedTemplate}
           isDisabled={
             !!(categoryError || allTemplatesError || isTemplatesLoading)
@@ -107,8 +121,8 @@ export const CategoryAndTemplate = ({
         />
         <FormGroup label={__('Output templates')} fieldId="output_template">
           <OutputSelect
-            selected={selectedOutputTemplates.output_templates}
-            setSelected={setSelectedOutputTemplates}
+            selected={selectedOutputTemplates}
+            setSelected={setOutputTemplates}
             apiKey={OUTPUT_TEMPLATES}
             name="output_templates"
             url={outputTemplatesUrl}
@@ -146,7 +160,7 @@ export const CategoryAndTemplate = ({
         />
         <SelectedTemplates
           selectedOutputTemplates={selectedOutputTemplates}
-          setOutputTemplates={setSelectedOutputTemplates}
+          setOutputTemplates={setOutputTemplates}
           runtimeTemplates={runtimeTemplates}
           setRuntimeTemplates={setRuntimeTemplates}
         />
@@ -158,9 +172,7 @@ export const CategoryAndTemplate = ({
 CategoryAndTemplate.propTypes = {
   jobCategories: PropTypes.array,
   jobTemplates: PropTypes.array,
-  selectedOutputTemplates: PropTypes.shape({
-    output_templates: PropTypes.array.isRequired,
-  }).isRequired,
+  selectedOutputTemplates: PropTypes.array.isRequired,
   runtimeTemplates: PropTypes.array.isRequired,
   setJobTemplate: PropTypes.func.isRequired,
   setOutputTemplates: PropTypes.func.isRequired,

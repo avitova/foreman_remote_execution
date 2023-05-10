@@ -17,6 +17,7 @@ import {
 import { CategoryAndTemplate } from './CategoryAndTemplate';
 
 import {
+  JOB_TEMPLATE,
   JOB_TEMPLATES,
   JOB_CATEGORIES,
   templatesUrl,
@@ -52,8 +53,23 @@ const ConnectedCategoryAndTemplate = ({
           }) => {
             if (!isCategoryPreselected) {
               setCategory(defaultCategory || jobCategories[0] || '');
-              if (defaultTemplate)
-                setJobTemplate(current => current || defaultTemplate);
+              if (defaultTemplate) {
+                const newJobTemplate = jobTemplate || defaultTemplate;
+                setJobTemplate(newJobTemplate);
+                if (newJobTemplate)
+                  dispatch(
+                    get({
+                      key: JOB_TEMPLATE,
+                      url: `/ui_job_wizard/template/${newJobTemplate}`,
+                      handleSuccess: ({ data }) => {
+                        if (data)
+                          setOutputTemplates(
+                            data.default_output_templates || []
+                          );
+                      },
+                    })
+                  );
+              }
             }
           },
         })
@@ -77,15 +93,24 @@ const ConnectedCategoryAndTemplate = ({
               per_page: 'all',
             }),
             handleSuccess: response => {
-              if (!jobTemplate)
-                setJobTemplate(
-                  current =>
-                    current ||
-                    Number(
-                      filterJobTemplates(response?.data?.results)[0]?.id
-                    ) ||
-                    null
-                );
+              if (!jobTemplate) {
+                const newJobTemplate =
+                  jobTemplate ||
+                  Number(filterJobTemplates(response?.data?.results)[0]?.id) ||
+                  null;
+                setJobTemplate(newJobTemplate);
+                if (newJobTemplate) {
+                  dispatch(
+                    get({
+                      key: JOB_TEMPLATE,
+                      url: `/ui_job_wizard/template/${newJobTemplate}`,
+                      handleSuccess: ({ data }) => {
+                        setOutputTemplates(data.default_output_templates || []);
+                      },
+                    })
+                  );
+                }
+              }
             },
           })
         );
@@ -125,9 +150,7 @@ ConnectedCategoryAndTemplate.propTypes = {
   category: PropTypes.string.isRequired,
   setCategory: PropTypes.func.isRequired,
   isCategoryPreselected: PropTypes.bool.isRequired,
-  outputTemplates: PropTypes.shape({
-    output_templates: PropTypes.array.isRequired,
-  }).isRequired,
+  outputTemplates: PropTypes.array.isRequired,
   setOutputTemplates: PropTypes.func.isRequired,
   runtimeTemplates: PropTypes.array.isRequired,
   setRuntimeTemplates: PropTypes.func.isRequired,

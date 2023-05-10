@@ -360,7 +360,7 @@ ReviewDetails.propTypes = {
   goToStepByName: PropTypes.func.isRequired,
 };
 
-ReviewDetails.defaultProps = { jobTemplateID: null, outputTemplateID: null };
+ReviewDetails.defaultProps = { jobTemplateID: null };
 
 const WrappedReviewDetails = props => (
   <WizardContextConsumer>
