@@ -11,7 +11,7 @@ const SelectedTemplate = ({ selected, setSelected, categoryName }) => {
   };
   return (
     <ChipGroup className="templates-chip-group" categoryName={categoryName}>
-      {selected.output_templates.map(({ name, id }, index) => (
+      {selected.map(({ name, id }, index) => (
         <Chip
           key={index}
           id={`${categoryName}-${id}`}
@@ -75,9 +75,7 @@ export const SelectedTemplates = ({
 };
 
 SelectedTemplates.propTypes = {
-  selectedOutputTemplates: PropTypes.shape({
-    output_templates: PropTypes.array.isRequired,
-  }).isRequired,
+  selectedOutputTemplates: PropTypes.array.isRequired,
   setOutputTemplates: PropTypes.func.isRequired,
   runtimeTemplates: PropTypes.array.isRequired,
   setRuntimeTemplates: PropTypes.func.isRequired,
@@ -85,9 +83,7 @@ SelectedTemplates.propTypes = {
 
 SelectedTemplate.propTypes = {
   categoryName: PropTypes.string.isRequired,
-  selected: PropTypes.shape({
-    output_templates: PropTypes.array.isRequired,
-  }).isRequired,
+  selected: PropTypes.array.isRequired,
   setSelected: PropTypes.func.isRequired,
 };
 

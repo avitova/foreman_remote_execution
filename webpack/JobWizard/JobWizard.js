@@ -46,9 +46,7 @@ export const JobWizard = ({ rerunData }) => {
     rerunData?.template_invocations?.[0]?.template_id ||
       jobCategoriesResponse?.default_template
   );
-  const [selectedOutputTemplates, setOutputTemplates] = useState({
-    output_templates: [],
-  });
+  const [selectedOutputTemplates, setOutputTemplates] = useState([]);
   const [runtimeTemplates, setRuntimeTemplates] = useState([]);
 
   const [category, setCategory] = useState(
@@ -220,7 +218,6 @@ export const JobWizard = ({ rerunData }) => {
     setSelectedTargets,
     setHostsSearchQuery,
     setJobTemplateID,
-    setOutputTemplates,
     setTemplateValues,
     setAdvancedValues,
   });

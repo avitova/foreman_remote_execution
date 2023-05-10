@@ -100,17 +100,15 @@ const ReviewDetails = ({
   };
   const stringOutputTemplates = () => {
     const outputTemplatesTotal =
-      selectedOutputTemplates.output_templates.length + runtimeTemplates.length;
+      selectedOutputTemplates.length + runtimeTemplates.length;
     if (outputTemplatesTotal === 0) {
       return __('No Output Templates');
     }
     if (
       (outputTemplatesTotal === 1 || outputTemplatesTotal === 2) &&
-      outputTemplatesTotal === selectedOutputTemplates.output_templates.length
+      outputTemplatesTotal === selectedOutputTemplates.length
     ) {
-      return selectedOutputTemplates.output_templates
-        .map(t => t.name)
-        .join(', ');
+      return selectedOutputTemplates.map(t => t.name).join(', ');
     }
     if (runtimeTemplates.length === 1 && outputTemplatesTotal === 1) {
       return runtimeTemplates[0];
@@ -352,9 +350,7 @@ const ReviewDetails = ({
 ReviewDetails.propTypes = {
   jobCategory: PropTypes.string.isRequired,
   jobTemplateID: PropTypes.number,
-  selectedOutputTemplates: PropTypes.shape({
-    output_templates: PropTypes.array.isRequired,
-  }).isRequired,
+  selectedOutputTemplates: PropTypes.array.isRequired,
   runtimeTemplates: PropTypes.array.isRequired,
   advancedValues: PropTypes.object.isRequired,
   scheduleValue: PropTypes.object.isRequired,
