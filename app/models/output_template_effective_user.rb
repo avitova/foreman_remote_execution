@@ -1,5 +1,5 @@
 class OutputTemplateEffectiveUser < ApplicationRecord
-    belongs_to :output_template  
+    belongs_to :output_template
     before_validation :set_defaults
 
     def set_defaults
